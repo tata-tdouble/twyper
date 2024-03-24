@@ -20,6 +20,8 @@ interface TwyperController {
     var currentCardController: CardController?
     fun swipeRight()
     fun swipeLeft()
+    fun swipeUp()
+    fun swipeDown()
 }
 
 class TwyperControllerImpl : TwyperController {
@@ -31,5 +33,13 @@ class TwyperControllerImpl : TwyperController {
 
     override fun swipeLeft() {
         currentCardController?.swipeLeft()
+    }
+
+    override fun swipeUp() {
+        currentCardController?.swipeUp()
+    }
+
+    override fun swipeDown() {
+        currentCardController?.swipeDown()
     }
 }

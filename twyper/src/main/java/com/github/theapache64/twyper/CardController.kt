@@ -31,18 +31,23 @@ interface CardController {
     fun isCardOut(): Boolean
     fun swipeRight()
     fun swipeLeft()
+    fun swipeUp()
+    fun swipeDown()
 }
 
 
 @Composable
 fun rememberCardController(): CardController {
     val scope = rememberCoroutineScope()
+
+    val screenHeight =
+        with(LocalDensity.current) { LocalConfiguration.current.screenHeightDp.dp.toPx() }
     val screenWidth =
         with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.toPx() }
     return remember {
         val swipeX = Animatable(0f)
         val swipeY = Animatable(0f)
-        CardControllerImpl(swipeX, swipeY, scope, screenWidth)
+        CardControllerImpl(swipeX, swipeY, scope, screenWidth, screenHeight)
     }
 }
 
@@ -51,6 +56,7 @@ open class CardControllerImpl(
     private val swipeY: Animatable<Float, AnimationVector1D>,
     private val scope: CoroutineScope,
     private val screenWidth: Float,
+    private val screenHeight: Float,
 ) : CardController {
     companion object {
         private const val SWIPE_DURATION_IN_MILLIS = 450
@@ -85,13 +91,22 @@ open class CardControllerImpl(
     override fun onDragEnd() {
         // User has ended the drag. Below we're getting the card's position to identify if it's gone
         // out of bounds.
-        val isSwipedOneThird = abs(swipeX.targetValue) > abs(screenWidth) / 3
-        if (isSwipedOneThird) {
+        val isSwipedWidthOneThird = abs(swipeX.targetValue) > abs(screenWidth) / 3
+        val isSwipedHeightOneThird = abs(swipeY.targetValue) > abs(screenHeight) / 3
+        if (isSwipedWidthOneThird || isSwipedHeightOneThird) {
             // Card's 1/3 is out
-            if (swipeX.targetValue > 0) {
-                swipeRight()
+            if (abs(swipeY.targetValue) > abs(swipeX.targetValue) ) {
+                if (swipeY.targetValue > 0){
+                    swipeDown()
+                } else {
+                    swipeUp()
+                }
             } else {
-                swipeLeft()
+                if (swipeX.targetValue > 0){
+                    swipeRight()
+                } else {
+                    swipeLeft()
+                }
             }
         } else {
             // go back to origin
@@ -100,7 +115,7 @@ open class CardControllerImpl(
     }
 
     override fun isCardOut(): Boolean {
-        return abs(swipeX.value) == screenWidth
+        return (abs(swipeX.value) == screenWidth || abs(swipeY.value) == screenHeight)
     }
 
     override fun swipeRight() {
@@ -114,6 +129,20 @@ open class CardControllerImpl(
         scope.launch {
             swipedOutDirection = SwipedOutDirection.LEFT
             swipeX.animateTo(-screenWidth, tween(SWIPE_DURATION_IN_MILLIS))
+        }
+    }
+
+    override fun swipeUp() {
+        scope.launch {
+            swipedOutDirection = SwipedOutDirection.UP
+            swipeY.animateTo(-screenHeight, tween(SWIPE_DURATION_IN_MILLIS))
+        }
+    }
+
+    override fun swipeDown() {
+        scope.launch {
+            swipedOutDirection = SwipedOutDirection.DOWN
+            swipeY.animateTo(screenHeight, tween(SWIPE_DURATION_IN_MILLIS))
         }
     }
 }

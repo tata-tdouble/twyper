@@ -35,6 +35,8 @@ fun rememberFlipCardController(): FlipCardController {
     val scope = rememberCoroutineScope()
     val screenWidth =
         with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.toPx() }
+    val screenHight =
+        with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.toPx() }
     return remember {
         val swipeX = Animatable(0f)
         val swipeY = Animatable(0f)
@@ -42,7 +44,7 @@ fun rememberFlipCardController(): FlipCardController {
         val frontAlpha = Animatable(1f)
         val backAlpha = Animatable(0f)
         val cardState = FlipState.FRONT
-        FlipCardControllerImpl(swipeX, swipeY, flipRotation, frontAlpha, backAlpha, cardState, scope, screenWidth)
+        FlipCardControllerImpl(swipeX, swipeY, flipRotation, frontAlpha, backAlpha, cardState, scope, screenWidth, screenHight)
     }
 }
 
@@ -54,8 +56,9 @@ class FlipCardControllerImpl(
     private val backAlpha: Animatable<Float, AnimationVector1D>,
     private var cardState: FlipState,
     private val scope: CoroutineScope,
-    screenWidth: Float
-) : FlipCardController, CardControllerImpl(swipeX, swipeY, scope, screenWidth) {
+    screenWidth: Float,
+    screenHeight: Float
+) : FlipCardController, CardControllerImpl(swipeX, swipeY, scope, screenWidth, screenHeight) {
 
     companion object {
         private const val FLIP_ROTATION_DURATION_IN_MILLIS = 500

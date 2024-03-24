@@ -27,7 +27,7 @@ inline fun <reified T> TwyperFlip(
     stackCount: Int = 2,
     paddingBetweenCards: Float = 40f,
     modifier: Modifier = Modifier,
-    cardModifier: () -> Modifier,
+    crossinline cardModifier: () -> Modifier,
     crossinline front: @Composable (T) -> Unit,
     crossinline back: @Composable (T) -> Unit
 ) {

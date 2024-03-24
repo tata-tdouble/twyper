@@ -13,7 +13,7 @@ import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.input.pointer.pointerInput
 
 enum class SwipedOutDirection {
-    LEFT, RIGHT
+    LEFT, RIGHT, UP, DOWN
 }
 
 @Composable
@@ -69,6 +69,7 @@ inline fun <reified T> Twyper(
                         }
                     }
                 }
+
             }
         }
     }
