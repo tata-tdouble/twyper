@@ -2,6 +2,8 @@
 
 # twyper
 
+This is an update of the original repo. I have added Swipe Up and Swipe Dwn functionalities.
+
 ![buildStatus](https://img.shields.io/github/workflow/status/theapache64/twyper/Java%20CI%20with%20Gradle?style=plastic)
 ![latestVersion](https://img.shields.io/github/v/release/theapache64/twyper)
 <a href="https://twitter.com/theapache64" target="_blank">
@@ -25,7 +27,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.github.theapache64:twyper:<latest.version>'
+  implementation 'com.github.tata-tdouble:twyper:<latest.version>'
 }
 ```
 
